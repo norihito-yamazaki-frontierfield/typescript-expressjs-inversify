@@ -7,9 +7,10 @@
       "moduleResolution": "node",
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
-      "outDir": "./dist",
       "removeComments": true,
-      "strict": true
+      "strict": true,
+      "esModuleInterop": true,
+      "outDir": "./dist"
     },
     "include": ["src/**/*"]
   }
