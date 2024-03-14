@@ -1,0 +1,25 @@
+
+@baseUrl=http://localhost:3000
+
+# /example
+### add
+POST {{baseUrl}}/example
+Content-Type: application/json
+
+{
+    "key": "key1",
+    "value" : "value1"
+}
+
+### get
+GET {{baseUrl}}/example/key1
+Content-Type: application/json
+
+
+### update
+PUT {{baseUrl}}/example/key1
+Content-Type: application/json
+
+{
+    "value" : "key1_value1"
+}

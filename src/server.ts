@@ -12,6 +12,7 @@ server.setConfig((app) => {
 
 const app = server.build();
 
+// todo:move config
 const port = 3000;
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
