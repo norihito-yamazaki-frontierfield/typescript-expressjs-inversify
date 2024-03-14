@@ -12,5 +12,11 @@
   "devDependencies": {
     "@types/node": "^20.11.27",
     "typescript": "^5.4.2"
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "inversify": "^6.0.2",
+    "inversify-express-utils": "^6.4.6",
+    "reflect-metadata": "^0.2.1"
   }
 }
