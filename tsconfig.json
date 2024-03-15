@@ -1,17 +1,17 @@
 {
-    "compilerOptions": {
-      "target": "es6",
-      "lib": ["es6", "dom"],
-      "types": ["reflect-metadata"],
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "removeComments": true,
-      "strict": true,
-      "esModuleInterop": true,
-      "outDir": "./dist"
-    },
-    "include": ["src/**/*"]
-  }
-  
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "lib": ["es2018", "dom"],
+    "types": ["reflect-metadata"],
+    "removeComments": true,
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ]
+}
