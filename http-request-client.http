@@ -23,3 +23,33 @@ Content-Type: application/json
 {
     "value" : "key1_value1"
 }
+
+
+
+###########################
+# KeyCloack
+###########################
+
+@keyCloack_baseuri = http://localhost:8080
+@user_username=local-user-2
+@user_password=password
+@client_id=local-client
+@client_secret=MJNfJGv4T5r1tiBOPfG8AdW19gm8BOBv
+@target_realm =local-realm
+
+### Get an access token with grant_type of password
+# @name keyCloacktoken
+POST {{keyCloack_baseuri}}/realms/{{target_realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{client_id}}&client_secret={{client_secret}}&username={{user_username}}&password={{user_password}}&grant_type=password&scope=openid
+
+### set token
+@user_access_token = {{keyCloacktoken.response.body.$.access_token}}
+
+
+### get userinfo
+
+GET {{keyCloack_baseuri}}/realms/{{target_realm}}/protocol/openid-connect/userinfo
+Authorization: Bearer {{user_access_token}}
+Content-Type: application/json

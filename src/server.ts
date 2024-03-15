@@ -29,3 +29,7 @@ server
     .setErrorConfig(errorConfigFn)
     .build()
     .listen(port, 'localhost', callback);
+
+// next:have
+// keycloackへのjwtを使ってuserinfo取得
+// mysql users からデータ取得
