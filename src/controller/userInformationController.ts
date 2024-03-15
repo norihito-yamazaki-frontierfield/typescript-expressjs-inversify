@@ -1,14 +1,17 @@
 import { inject } from "inversify";
 import {
-    controller, httpGet
+    controller, httpGet,
+    requestParam
 } from "inversify-express-utils";
 import { IKeycloakService } from "../services/keycloakService";
 import { BaseHttpController } from "./baseHttpController";
+import { IUserRepository } from "../repositories/userRepository";
 
 @controller("/userInformation")
 export class userInformationController extends BaseHttpController {
 
-    constructor(@inject("IKeycloakService") private keycloakService: IKeycloakService) {
+    constructor(@inject("IKeycloakService") private keycloakService: IKeycloakService,
+        @inject("IUserRepository") private userRepository: IUserRepository) {
         super();
     }
 
@@ -28,6 +31,17 @@ export class userInformationController extends BaseHttpController {
         const result = await this.keycloakService.getUserInfo(token, target_realm);
 
         return this.okJson(result);
+    }
+
+    @httpGet("/:keycloak_user_id")
+    public async getDb(@requestParam("keycloak_user_id") keycloak_user_id: string) {
+        const user = await this.userRepository.findById(keycloak_user_id);
+
+        if (user) {
+            return this.okJson(user);
+        } else {
+            return this.notFound();
+        }
     }
 
     private getToken(authorizationHeader: string) {

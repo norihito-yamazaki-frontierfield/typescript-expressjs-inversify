@@ -26,6 +26,7 @@
     "express": "^4.18.3",
     "inversify": "^6.0.2",
     "inversify-express-utils": "^6.4.6",
+    "mysql2": "^3.9.2",
     "redis": "^4.6.13",
     "reflect-metadata": "^0.2.1"
   }

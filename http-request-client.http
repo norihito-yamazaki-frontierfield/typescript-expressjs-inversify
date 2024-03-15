@@ -39,7 +39,9 @@ Content-Type: application/json
 
 @baseUrl=http://localhost:3000/api/v1
 
+# -*-*-*-*-*-*-*-*-*-
 # /example
+# -*-*-*-*-*-*-*-*-*-
 ### add
 POST {{baseUrl}}/example
 Content-Type: application/json
@@ -63,7 +65,16 @@ Content-Type: application/json
 }
 
 
+# -*-*-*-*-*-*-*-*-*-
+# /userInformation
+# -*-*-*-*-*-*-*-*-*-
 ### get
 GET {{baseUrl}}/userInformation/
+Content-Type: application/json
+Authorization: Bearer {{user_access_token}}
+
+
+### get
+GET {{baseUrl}}/userInformation/46f1da17-19a3-481a-a8b8-b0d0705dec47
 Content-Type: application/json
 Authorization: Bearer {{user_access_token}}
