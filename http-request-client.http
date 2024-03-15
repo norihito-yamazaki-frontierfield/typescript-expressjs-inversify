@@ -1,31 +1,3 @@
-
-@baseUrl=http://localhost:3000/api/v1
-
-# /example
-### add
-POST {{baseUrl}}/example
-Content-Type: application/json
-
-{
-    "key": "key1",
-    "value" : "value1"
-}
-
-### get
-GET {{baseUrl}}/example/key1
-Content-Type: application/json
-
-
-### update
-PUT {{baseUrl}}/example/key1
-Content-Type: application/json
-
-{
-    "value" : "key1_value1"
-}
-
-
-
 ###########################
 # KeyCloack
 ###########################
@@ -53,3 +25,45 @@ client_id={{client_id}}&client_secret={{client_secret}}&username={{user_username
 GET {{keyCloack_baseuri}}/realms/{{target_realm}}/protocol/openid-connect/userinfo
 Authorization: Bearer {{user_access_token}}
 Content-Type: application/json
+
+
+### well know
+GET {{keyCloack_baseuri}}/realms/{{target_realm}}/.well-known/openid-configuration
+Content-Type: application/json
+
+
+###########################
+# API
+###########################
+
+
+@baseUrl=http://localhost:3000/api/v1
+
+# /example
+### add
+POST {{baseUrl}}/example
+Content-Type: application/json
+
+{
+    "key": "key1",
+    "value" : "value1"
+}
+
+### get
+GET {{baseUrl}}/example/key1
+Content-Type: application/json
+
+
+### update
+PUT {{baseUrl}}/example/key1
+Content-Type: application/json
+
+{
+    "value" : "key1_value1"
+}
+
+
+### get
+GET {{baseUrl}}/userInformation/
+Content-Type: application/json
+Authorization: Bearer {{user_access_token}}
