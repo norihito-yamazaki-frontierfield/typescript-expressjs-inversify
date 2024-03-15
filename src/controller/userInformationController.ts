@@ -33,15 +33,34 @@ export class userInformationController extends BaseHttpController {
         return this.okJson(result);
     }
 
-    @httpGet("/:keycloak_user_id")
-    public async getDb(@requestParam("keycloak_user_id") keycloak_user_id: string) {
-        const user = await this.userRepository.findById(keycloak_user_id);
+    @httpGet("/enrich")
+    public async getEnrich() {
+        const authHeader = this.httpContext.request.headers["authorization"];
+        if (!authHeader) {
+            return this.unauthorizedJson("Unauthorized: No token provided or token is improperly formatted.");
+        }
+
+        const token = this.getToken(authHeader);
+        if (!token) {
+            return this.unauthorizedJson("Unauthorized: No token provided or token is improperly formatted.");
+        }
+
+        const target_realm = "local-realm";
+        let userInfo = await this.keycloakService.getUserInfo(token, target_realm);
+
+        if (!userInfo || !userInfo.sub) {
+            return this.badRequest("UserInfo from Keycloak is missing or does not have a sub property.");
+        }
+
+        const user = await this.userRepository.findById(userInfo.sub);
 
         if (user) {
-            return this.okJson(user);
+            userInfo = { ...userInfo, ...user };
+            return this.okJson(userInfo);
         } else {
-            return this.notFound();
+            return this.badRequest("User not found in the repository.");
         }
+
     }
 
     private getToken(authorizationHeader: string) {

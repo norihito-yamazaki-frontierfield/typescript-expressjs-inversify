@@ -44,8 +44,6 @@ export class KeycloakService implements IKeycloakService {
         if (!hospitalId) {
             throw new Error(`Hospital ID is not provided.`);
         }
-
-
         const cacheKey = `userinfo_endpoint:${hospitalId}`;
         let userInfoEndpoint = await this.redisClient.get(cacheKey);
 
@@ -59,7 +57,6 @@ export class KeycloakService implements IKeycloakService {
             }
 
             await this.redisClient.set(cacheKey, userInfoEndpoint, { EX: 60 * 60 });
-
         }
 
         const userInfoResponse = await axios.get(userInfoEndpoint, {

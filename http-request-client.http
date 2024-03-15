@@ -2,7 +2,7 @@
 # KeyCloack
 ###########################
 
-@keyCloack_baseuri = http://localhost:8080
+@keyCloack_baseuri=http://localhost:8080
 @user_username=local-user-2
 @user_password=password
 @client_id=local-client
@@ -75,6 +75,6 @@ Authorization: Bearer {{user_access_token}}
 
 
 ### get
-GET {{baseUrl}}/userInformation/46f1da17-19a3-481a-a8b8-b0d0705dec47
+GET {{baseUrl}}/userInformation/enrich
 Content-Type: application/json
 Authorization: Bearer {{user_access_token}}
