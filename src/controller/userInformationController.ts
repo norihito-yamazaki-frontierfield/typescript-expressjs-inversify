@@ -28,9 +28,7 @@ export class userInformationController extends BaseHttpController {
         'Unauthorized: No token provided or token is improperly formatted.'
       );
     }
-
-    const target_realm = 'local-realm';
-    const result = await this.keycloakService.getUserInfo(token, target_realm);
+    const result = await this.keycloakService.getUserInfo(token);
 
     return this.okJson(result);
   }
@@ -51,8 +49,7 @@ export class userInformationController extends BaseHttpController {
       );
     }
 
-    const target_realm = 'local-realm';
-    let userInfo = await this.keycloakService.getUserInfo(token, target_realm);
+    let userInfo = await this.keycloakService.getUserInfo(token);
 
     if (!userInfo || !userInfo.sub) {
       return this.badRequest(

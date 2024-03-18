@@ -108,7 +108,7 @@ docker-compose down -v
 
 
 ```bash
-npm install --save-dev jest typescript ts-jest @types/jest jest-mock-axios
+npm install --save-dev jest typescript ts-jest @types/jest
 
 npx ts-jest config:init
 

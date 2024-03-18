@@ -1,6 +1,6 @@
-import axios, {AxiosInstance} from 'axios';
 import {inject, injectable} from 'inversify';
 import {RedisClientType} from 'redis';
+import {decodeJwt} from 'jose';
 
 interface UserInfo {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -8,13 +8,11 @@ interface UserInfo {
 }
 
 export interface IKeycloakService {
-  getUserInfo(token: string, hospitalId: string): Promise<UserInfo>;
+  getUserInfo(token: string): Promise<UserInfo>;
 }
 
 @injectable()
 export class KeycloakService implements IKeycloakService {
-  private axiosInstances: {[key: string]: AxiosInstance} = {};
-
   public constructor(
     @inject('KeycloakBaseUri') private readonly keycloakBaseUri: string,
     @inject('RedisClient') private readonly redisClient: RedisClientType
@@ -27,53 +25,45 @@ export class KeycloakService implements IKeycloakService {
     }
   }
 
-  private createAxiosInstanceForHospital(hospitalId: string): AxiosInstance {
-    return axios.create({
-      baseURL: `${this.keycloakBaseUri}/realms/${hospitalId}`,
-      headers: {'Content-Type': 'application/json'},
-    });
+  private decodeToken(token: string) {
+    return decodeJwt(token);
   }
 
-  private getAxiosInstance(hospitalId: string): AxiosInstance {
-    if (!this.axiosInstances[hospitalId]) {
-      this.axiosInstances[hospitalId] =
-        this.createAxiosInstanceForHospital(hospitalId);
-    }
-    return this.axiosInstances[hospitalId];
-  }
-  public async getUserInfo(
-    token: string,
-    hospitalId: string
-  ): Promise<UserInfo> {
-    if (!token) {
-      throw new Error('Token is not provided.');
-    }
+  private async getUserInfoEndpoint(issuer: string): Promise<string> {
+    const cacheKey = `userinfo_endpoint:${issuer}`;
+    const cachedEndpoint = await this.redisClient.get(cacheKey);
 
-    if (!hospitalId) {
-      throw new Error('Hospital ID is not provided.');
-    }
-    const cacheKey = `userinfo_endpoint:${hospitalId}`;
-    let userInfoEndpoint = await this.redisClient.get(cacheKey);
+    if (cachedEndpoint) return cachedEndpoint;
 
-    if (!userInfoEndpoint) {
-      const axiosInstance = this.getAxiosInstance(hospitalId);
-      const openidConfigResponse = await axiosInstance.get(
-        '/.well-known/openid-configuration'
+    const response = await fetch(`${issuer}/.well-known/openid-configuration`);
+    if (!response.ok) throw new Error('Failed to fetch OpenID configuration.');
+
+    const {userinfo_endpoint: userinfoEndpoint} = await response.json();
+    if (!userinfoEndpoint)
+      throw new Error(
+        `userinfo_endpoint for issuer ${issuer} could not be found.`
       );
-      userInfoEndpoint = openidConfigResponse.data.userinfo_endpoint;
 
-      if (!userInfoEndpoint) {
-        throw new Error(
-          `userinfo_endpoint for hospitalId ${hospitalId} could not be found.`
-        );
-      }
+    await this.redisClient.set(cacheKey, userinfoEndpoint, {EX: 60 * 60});
+    return userinfoEndpoint;
+  }
 
-      await this.redisClient.set(cacheKey, userInfoEndpoint, {EX: 60 * 60});
+  public async getUserInfo(token: string): Promise<UserInfo> {
+    if (!token) throw new Error('Token is not provided.');
+
+    const decodedToken = this.decodeToken(token);
+    if (!decodedToken.iss) {
+      throw new Error('Issuer (iss) is not present in the token.');
     }
+    const issuer = decodedToken.iss; // この時点で issuer は string 型として確実に扱えます
 
-    const userInfoResponse = await axios.get(userInfoEndpoint, {
+    const userInfoEndpoint = await this.getUserInfoEndpoint(issuer);
+
+    const response = await fetch(userInfoEndpoint, {
       headers: {Authorization: `Bearer ${token}`},
     });
-    return userInfoResponse.data;
+    if (!response.ok) throw new Error('Failed to fetch user info.');
+
+    return response.json();
   }
 }
