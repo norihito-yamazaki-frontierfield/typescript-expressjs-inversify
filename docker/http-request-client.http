@@ -2,11 +2,11 @@
 # KeyCloack
 ###########################
 
-@keyCloack_baseuri=http://localhost:8080
+@keyCloack_baseuri=http://localhost:8081/keycloak
 @user_username=local-user-2
 @user_password=password
 @client_id=local-client
-@client_secret=MJNfJGv4T5r1tiBOPfG8AdW19gm8BOBv
+@client_secret=7oadTrSZNbH4BbNebJwMKreCioIE92Kn
 @target_realm =local-realm
 
 ### Get an access token with grant_type of password

@@ -4,6 +4,8 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
     platform: linux/amd64
+    expose:
+      - 8080
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -12,15 +14,27 @@ services:
       DB_DATABASE: keycloak
       DB_USER: keycloak
       DB_PASSWORD: password
+      KC_PROXY: "edge"
+      KC_HTTP_RELATIVE_PATH: "keycloak"
     command:
       - start-dev
-    ports:
-      - "8080:8080"
+    # nginx経由からアクセスする
+    #ports: 
+    #  - "8080:8080"
     depends_on:
       - mysql
       - redis
     volumes:
       - keycloak_data:/opt/keycloak/data
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - keycloak
 
   mysql:
     image: mysql:8.3
@@ -31,14 +45,14 @@ services:
       MYSQL_USER: keycloak
       MYSQL_PASSWORD: password
     ports:
-      - "3306:3306" # MySQLポートマッピング
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
   redis:
     image: redis:7.2.4
     ports:
-      - "6379:6379" # Redisポートマッピング
+      - "6379:6379"
     volumes:
       - redis_data:/data
 

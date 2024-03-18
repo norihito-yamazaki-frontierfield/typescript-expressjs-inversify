@@ -2,6 +2,7 @@
 
 1. コンテナ立ち上げ
 ```bash
+cd docker
 docker-compose up
 ```
 
@@ -74,8 +75,8 @@ INSERT INTO offices (company_id, name) VALUES (1, 'Office 1'), (2, 'Office 2');
 -- keycloak_user_idには、KeyCloackのuserinfo APIから取得したsubの値を設定してください。
 INSERT INTO users (keycloak_user_id, name, email, company_id, office_id) 
 VALUES 
-('757ec30c-7f60-4ecb-bf3e-aeaa406fec3b', 'User 1', 'user1@example.com', 1, 1),
-('46f1da17-19a3-481a-a8b8-b0d0705dec47', 'User 2', 'user2@example.com', 2, 2);
+('ec04c490-a4d0-498a-816a-bc0c116f5a40', 'User 1', 'user1@example.com', 1, 1),
+('961e3175-89bf-460d-8de3-cf0b4c5bfc08', 'User 2', 'user2@example.com', 2, 2);
 ```
 
 
