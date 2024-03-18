@@ -1,6 +1,6 @@
 import {injectable, inject} from 'inversify';
 import {DbContext} from '../infrastructure/database/dbContext';
-import {RowDataPacket} from 'mysql2';
+import {FieldPacket, RowDataPacket} from 'mysql2';
 
 export interface ICompany {
   id: number;
@@ -43,7 +43,7 @@ export class UserRepository implements IUserRepository {
 
     const [rows] = (await this.dbContext
       .getPool()
-      .query(query, [keycloak_user_id])) as [RowDataPacket[], any];
+      .query(query, [keycloak_user_id])) as [RowDataPacket[], FieldPacket[]];
 
     if (rows.length > 0) {
       const row = rows[0];

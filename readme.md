@@ -91,3 +91,18 @@ docker-compose down
 docker-compose down -v
 
 ```
+
+
+## jest
+
+
+```bash
+npm install --save-dev jest typescript ts-jest @types/jest jest-mock-axios
+
+npx ts-jest config:init
+
+```
+
+- jest: Jestテストフレームワーク
+- ts-jest: TypeScriptのコードをテストするためのJestのプリプロセッサ
+- @types/jest: JestのTypeScript型定義
