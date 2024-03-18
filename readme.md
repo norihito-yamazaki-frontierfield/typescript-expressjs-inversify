@@ -77,6 +77,17 @@ INSERT INTO users (keycloak_user_id, name, email, company_id, office_id)
 VALUES 
 ('ec04c490-a4d0-498a-816a-bc0c116f5a40', 'User 1', 'user1@example.com', 1, 1),
 ('961e3175-89bf-460d-8de3-cf0b4c5bfc08', 'User 2', 'user2@example.com', 2, 2);
+
+CREATE TABLE issuers (
+    iss VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (iss)
+);
+INSERT INTO issuers (iss, name) 
+VALUES 
+('http://localhost:8081/keycloak/realms/local-realm', 'local-realm')
 ```
 
 

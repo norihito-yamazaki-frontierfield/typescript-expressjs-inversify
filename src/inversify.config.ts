@@ -7,6 +7,11 @@ import {createClient} from 'redis';
 import {IKeycloakService, KeycloakService} from './services/keycloakService';
 import {DbContext} from './infrastructure/database/dbContext';
 import {IUserRepository, UserRepository} from './repositories/userRepository';
+import {
+  IIssuerRepository,
+  IssuerRepository,
+} from './repositories/issuerRepository';
+import {IIssuerService, IssuerService} from './services/issuerService';
 
 // todo:move config
 const keycloakBaseUri = 'http://localhost:8080';
@@ -32,6 +37,15 @@ container.bind<string>('DBName').toConstantValue('my_custom_db');
 container
   .bind<IUserRepository>('IUserRepository')
   .to(UserRepository)
+  .inSingletonScope();
+
+container
+  .bind<IIssuerRepository>('IIssuerRepository')
+  .to(IssuerRepository)
+  .inSingletonScope();
+container
+  .bind<IIssuerService>('IIssuerService')
+  .to(IssuerService)
   .inSingletonScope();
 
 const redisClient = createClient({
